@@ -29,6 +29,10 @@ var testBaskets = []struct {
 	{[]string{"D", "D"}, 30},
 	{[]string{"C", "D"}, 35},
 	{[]string{"A", "D"}, 65},
+	{[]string{"A", "A", "A"}, 130},
+	{[]string{"B", "B"}, 45},
+	{[]string{"A", "A", "A", "A", "A", "A", "D"}, 275},
+	{[]string{"A", "A", "A", "B", "B"}, 175},
 }
 
 func Test(t *testing.T) {
@@ -41,7 +45,7 @@ func Test(t *testing.T) {
 				for _, code := range testBasket.codes {
 					checkout.Scan(code)
 				}
-				g.Assert(checkout.Total).Equal(testBasket.expectedTotal)
+				g.Assert(checkout.Total()).Equal(testBasket.expectedTotal)
 			}
 		})
 		// g.It("Should add two numbers ", func() {
