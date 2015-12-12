@@ -16,50 +16,33 @@ Item   Unit      Special
   C     20
   D     15
 */
+
+var testBaskets = []struct {
+	codes         []string
+	expectedTotal int
+}{
+	{[]string{"A"}, 50},
+	{[]string{"B"}, 30},
+	{[]string{"C"}, 20},
+	{[]string{"D"}, 15},
+	{[]string{"C", "C"}, 40},
+	{[]string{"D", "D"}, 30},
+	{[]string{"C", "D"}, 35},
+	{[]string{"A", "D"}, 65},
+}
+
 func Test(t *testing.T) {
 	g := Goblin(t)
-	g.Describe("when scanning", func() {
-		g.Describe("a single C", func() {
-			g.It("should make the total 20", func() {
-				checkout := Checkout{}
-				checkout.Scan("C")
-				g.Assert(checkout.Total).Equal(20)
-			})
-		})
+	g.Describe("when scanning some known baskets", func() {
+		g.It("should correctly calculate the totals", func() {
 
-		g.Describe("a single D", func() {
-			g.It("should make the total 15", func() {
+			for _, testBasket := range testBaskets {
 				checkout := Checkout{}
-				checkout.Scan("D")
-				g.Assert(checkout.Total).Equal(15)
-			})
-		})
-
-		g.Describe("two Cs", func() {
-			g.It("should make the total 40", func() {
-				checkout := Checkout{}
-				checkout.Scan("C")
-				checkout.Scan("C")
-				g.Assert(checkout.Total).Equal(40)
-			})
-		})
-
-		g.Describe("two Ds", func() {
-			g.It("should make the total 30", func() {
-				checkout := Checkout{}
-				checkout.Scan("C")
-				checkout.Scan("C")
-				g.Assert(checkout.Total).Equal(40)
-			})
-		})
-
-		g.Describe("a C and a D", func() {
-			g.It("should make the total 35", func() {
-				checkout := Checkout{}
-				checkout.Scan("C")
-				checkout.Scan("D")
-				g.Assert(checkout.Total).Equal(35)
-			})
+				for _, code := range testBasket.codes {
+					checkout.Scan(code)
+				}
+				g.Assert(checkout.Total).Equal(testBasket.expectedTotal)
+			}
 		})
 		// g.It("Should add two numbers ", func() {
 		// 	g.Assert(1 + 1).Equal(2)
